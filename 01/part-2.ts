@@ -1,11 +1,4 @@
 const rawInput = await Bun.file("01/input.txt").text();
-const testInput = `two1nine
-eightwothree
-abcone2threexyz
-xtwone3four
-4nineeightseven2
-zoneight234
-7pqrstsixteen`;
 const input = rawInput.split(/\n+/);
 
 const writtenNumbers = {
@@ -19,11 +12,17 @@ const writtenNumbers = {
   eight: 8,
   nine: 9,
 };
-const firstAndLastDigit = (str: string) => {
-  const parsedStr = str.replaceAll(
-    /(one|two|three|four|five|six|seven|eight|nine)/g,
-    (writtenNumber) => writtenNumbers[writtenNumber] || writtenNumber
+
+const replaceWrittenNumber = (str: string) => {
+  return str.replaceAll(
+    /(one)|(two)|(three)|(four)|(five)|(six)|(seven)|(eight)|(nine)/g,
+    (writtenNumber) =>
+      writtenNumbers[writtenNumber] + writtenNumber[writtenNumber.length - 1]
   );
+};
+
+const firstAndLastDigit = (str: string) => {
+  const parsedStr = replaceWrittenNumber(replaceWrittenNumber(str)); // do it twice for the overlapping edge cases
   let firstDigit: string;
   let lastDigit: string;
   for (let letter of parsedStr) {

@@ -1,16 +1,13 @@
-lockfileVersion: '6.0'
+lockfileVersion: 5.3
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
+specifiers:
+  bun-types: ^1.0.14
 
 devDependencies:
-  bun-types:
-    specifier: ^1.0.14
-    version: 1.0.14
+  bun-types: 1.0.14
 
 packages:
 
-  /bun-types@1.0.14:
+  /bun-types/1.0.14:
     resolution: {integrity: sha512-hLVfM2fk8xSJeobfuPGilfvxM5gLtEy1bn7RJhrtw3u4OaC0kieXKYFFTVHU8jZ3hj8YyPLIFClIUodkFSrMBQ==}
     dev: true
