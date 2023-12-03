@@ -3,13 +3,13 @@ const input = rawInput.split(/\n+/);
 
 const maxPowers = input.map((game) => {
   const red = Math.max(
-    ...game.match(/\d+(?=\sred)/g).map((val) => parseInt(val, 10))
+    ...game.match(/\d+(?=\sred)/g).map((val) => Number(val))
   );
   const green = Math.max(
-    ...game.match(/\d+(?=\sgreen)/g).map((val) => parseInt(val, 10))
+    ...game.match(/\d+(?=\sgreen)/g).map((val) => Number(val))
   );
   const blue = Math.max(
-    ...game.match(/\d+(?=\sblue)/g).map((val) => parseInt(val, 10))
+    ...game.match(/\d+(?=\sblue)/g).map((val) => Number(val))
   );
 
   return red * green * blue;

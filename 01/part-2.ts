@@ -37,7 +37,7 @@ const firstAndLastDigit = (str: string) => {
       break;
     }
   }
-  return parseInt(firstDigit + lastDigit, 10);
+  return Number(firstDigit + lastDigit);
 };
 
 const answer: number = input.reduce((acc: number, curr: string) => {

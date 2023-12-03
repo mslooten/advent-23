@@ -1,50 +1,77 @@
 const rawInput = await Bun.file("03/input.txt").text();
-const testInput = `467..114..
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755.
-...$.*....
-.664.598..`;
-const input = testInput.split(/\n+/);
+const input = rawInput.split(/\n+/);
 
-let total = 0;
+const starMap = {};
 
-const isAdjacentSymbol = (
+input.forEach((line, index) => {
+  const matches = line.matchAll(/[\*]/g);
+  for (const match of matches) {
+    starMap[`${index}_${match.index}`] = [];
+  }
+});
+
+const fillStarMap = (
+  str: string,
+  arrIndex: number,
+  offset: number,
+  nr: number
+) => {
+  const matches = str.matchAll(/[\*]/g);
+  for (const match of matches) {
+    Array.isArray(starMap[`${arrIndex}_${match.index + offset}`])
+      ? starMap[`${arrIndex}_${match.index + offset}`].push(nr)
+      : (starMap[`${arrIndex}_${match.index + offset}`] = [nr]);
+  }
+};
+
+const mapToStarMap = (
   index: number,
   indexStart: number,
   indexEnd: number,
-  arr: string[]
-): boolean => {
-  let search = "";
+  arr: string[],
+  nr: number
+) => {
   if (index > 0) {
-    search += arr[index - 1].substring(indexStart, indexEnd);
+    fillStarMap(
+      arr[index - 1].substring(indexStart, indexEnd),
+      index - 1,
+      indexStart,
+      nr
+    );
   }
-  search += arr[index].substring(indexStart, indexEnd);
+  fillStarMap(
+    arr[index].substring(indexStart, indexEnd),
+    index,
+    indexStart,
+    nr
+  );
   if (index < arr.length - 1) {
-    search += arr[index + 1].substring(indexStart, indexEnd);
+    fillStarMap(
+      arr[index + 1].substring(indexStart, indexEnd),
+      index + 1,
+      indexStart,
+      nr
+    );
   }
-  const found = search.match(/[\*]/)?.length > 0;
-  if (found) {
-    console.log(search.matchAll(/[\*]/g));
-  }
-  return search.match(/[\*]/)?.length > 0;
 };
-
-const mapOfAsterisks = {};
 
 input.forEach((line, index, arr) => {
   const matches = line.matchAll(/\d+/g);
   for (const match of matches) {
-    const indexStart = match.index - 1;
+    const indexStart = match.index > 0 ? match.index - 1 : match.index;
     const indexEnd = match.index + match[0].length + 1;
-    if (isAdjacentSymbol(index, indexStart, indexEnd, arr)) {
-      const nr = parseInt(match[0], 10);
-      total += nr;
-    }
+    mapToStarMap(index, indexStart, indexEnd, arr, Number(match[0]));
   }
 });
-console.log(total);
+
+const filteredAndMultiplied = Object.values(starMap)
+  .filter((arr: number[]) => {
+    return arr.length > 1;
+  })
+  .flatMap((arr: number[]) => arr.reduce((a, b) => a * b));
+
+const result = filteredAndMultiplied.reduce((a, b) => {
+  return a + b;
+}, 0);
+
+console.log(result);
