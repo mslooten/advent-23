@@ -1,5 +1,3 @@
-// Shitty solution, brute force. Took 5 mins but got there.
-
 const rawInput = await Bun.file("05/input.txt").text();
 console.time();
 
@@ -18,7 +16,9 @@ const input = rawInput.split(/\n\n/).map((val) => {
 const seeds = input[0][0];
 console.log(seeds);
 
-let minVal = 4294967295;
+let minVal: { val: number; source?: number } = {
+  val: 4294967295,
+};
 
 const locationResolver = (source: number) => {
   let index = 1;
@@ -30,14 +30,16 @@ const locationResolver = (source: number) => {
     if (foundArr) {
       searchVal = foundArr[0] + searchVal - foundArr[1];
       if (index === 7) {
-        if (minVal > searchVal) {
-          minVal = searchVal;
+        if (minVal.val > searchVal) {
+          minVal.source = source;
+          minVal.val = searchVal;
         }
       }
     } else {
       if (index === 7) {
-        if (minVal > searchVal) {
-          minVal = searchVal;
+        if (minVal.val > searchVal) {
+          minVal.source = source;
+          minVal.val = searchVal;
         }
       }
     }
@@ -46,9 +48,13 @@ const locationResolver = (source: number) => {
 };
 
 for (let i = 0; i <= seeds.length / 2; i += 2) {
-  for (let j = seeds[i]; j < seeds[i] + seeds[i + 1]; j++) {
+  for (let j = seeds[i]; j < seeds[i] + seeds[i + 1]; j += 100000) {
     locationResolver(j);
   }
+}
+
+for (let i = minVal.source - 99999; i < minVal.source; i++) {
+  locationResolver(i);
 }
 console.log(minVal);
 
